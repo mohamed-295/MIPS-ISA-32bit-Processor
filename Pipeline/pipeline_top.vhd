@@ -278,20 +278,20 @@ PCSrc <= EX_MEM_zero_flag_out and M_EX_MEM_out(2);
 	REG         : Reg_File             port map(clk, reset, WB_out(1), write_reg,Write_mux_out, IF_ID_OUT(25 downto 21), IF_ID_OUT(20 downto 16), ReadData1_To_EX, ReadData2_To_EX);
 	Control     : MainControl          port map(IF_ID_OUT(31 downto 26),RegDst,Jump,Branch,MemRead,MemtoReg,MemWrite ,ALUSrc, RegWrite,ALUOp);
 	SE          : sign_ext             port map(IF_ID_OUT(15 downto 0), SignExtendOut);
-	ID_EX       : ID_EX_Register 	   port map(clk, reset,WB_ID_EX_in,M_ID_EX_in ,EX_ID_EX_in,IF_TO_EX, ReadData1_To_EX, ReadData2_To_EX,SignExtendOut,IF_ID_OUT(25 downto 21),IF_ID_OUT(21 downto 16),IF_ID_OUT(16 downto 11),WB_ID_EX_out,M_ID_EX_out,EX_out,EX_to_adder,ReadData1_EX_out,ReadData2_EX_out,SignExtend_EX,rs_out_EX,rt_out_EX,rd_out_EX);
+	ID_EX       : ID_EX_Register 	   port map(clk, reset,WB_ID_EX_in,M_ID_EX_in ,EX_ID_EX_in,IF_TO_EX, ReadData1_To_EX, ReadData2_To_EX,SignExtendOut,IF_ID_OUT(25 downto 21),IF_ID_OUT(20 downto 16),IF_ID_OUT(15 downto 11),WB_ID_EX_out,M_ID_EX_out,EX_out,EX_to_adder,ReadData1_EX_out,ReadData2_EX_out,SignExtend_EX,rs_out_EX,rt_out_EX,rd_out_EX);
 	MUX_RegDst  : MUX2x1_5bit          port map(rt_out_EX,rd_out_EX, EX_out(3), MUX_RegDst_out);
  	SLL_EX      : SL2                  port map(SignExtend_EX, ShiftLeftToAdd2);
 	ADD_2       : Add_ALU			   port map(EX_to_adder,ShiftLeftToAdd2,Add2_out);	  
 	ALU_CONTROL : ALUControl           port map(EX_out(2 downto 1), SignExtend_EX(5 downto 0), ALUControltoALU);	  
 	Main_ALU    : ALU                  port map(MUX_A_out,MUX_ALUSRC_OUT,ALUControltoALU,AluResult,Zero); 
     Forwarding  : ForwardingUnit	   port map(rs_out_EX,rt_out_EX, EX_MEM_mux_out, write_reg, WB_EX_MEM_out(1), WB_out(1), Forward_MUX_A, Forward_MUX_B);
-	MUX_A       : MUX3x1_32bit    	   port map(ReadData1_EX_out, Write_mux_out,MemAddress,Forward_MUX_A, MUX_A_out);
-	MUX_B       : MUX3x1_32bit    	   port map(ReadData2_EX_out, Write_mux_out,MemAddress,Forward_MUX_B, MUX_B_out);
+	MUX_A       : MUX3x1_32bit    	   port map(ReadData1_EX_out,MemAddress, Write_mux_out,Forward_MUX_A, MUX_A_out);
+	MUX_B       : MUX3x1_32bit    	   port map(ReadData2_EX_out, MemAddress, Write_mux_out,Forward_MUX_B, MUX_B_out);
 	MUX_ALUSRC  : MUX2x1_32bit         port map(MUX_B_out, SignExtend_EX, EX_out(0), MUX_ALUSRC_OUT);
 	EX_MEM 		: EX_MEM_REGISTER 	   port map(clk, reset,WB_ID_EX_out,M_ID_EX_out,Add2_out,Zero,AluResult,MUX_B_out,MUX_RegDst_out,WB_EX_MEM_out,M_EX_MEM_out,EX_MEM_pc_adder_out, EX_MEM_zero_flag_out,MemAddress, mem_write_data, EX_MEM_mux_out);
 	MEM         : DataMemory           port map(clk,MemAddress,M_EX_MEM_out(0),M_EX_MEM_out(1), mem_write_data,MemDataOut);
 	MEM_WB		: MEM_WB_REGISTER      port map(clk,reset,WB_EX_MEM_out,MemDataOut,MemAddress,EX_MEM_mux_out,WB_out,read_data_reg_to_mux,mem_add_out,write_reg);
-	MUX_Write   : MUX2x1_32bit         port map(read_data_reg_to_mux, mem_add_out,WB_out(0), Write_mux_out);
+	MUX_Write   : MUX2x1_32bit         port map(mem_add_out, read_data_reg_to_mux,WB_out(0), Write_mux_out);
 
 end architecture;
 
