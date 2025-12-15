@@ -247,7 +247,7 @@ end component;
 signal PC_in, PC_out, MemDataOut, InstructionMemOut, PC_adder, IF_TO_EX, IF_ID_OUT, Write_mux_out, SignExtendOut,EX_to_adder,ReadData1_EX_out,ReadData2_EX_out,SignExtend_EX : std_logic_vector(31 downto 0);
 signal ReadData1_To_EX, ReadData2_To_EX,read_data_reg_to_mux,MuxtoPC,mem_add_out,ShiftLeftToAdd2, Add2_out, MemAddress, MUX_A_out, MUX_B_out, MUX_ALUSRC_OUT,AluResult,EX_MEM_pc_adder_out,mem_write_data : std_logic_vector(31 downto 0) ;
 signal write_reg,rs_out_EX,rt_out_EX ,rd_out_EX, MUX_RegDst_out, EX_MEM_Rd,EX_MEM_mux_out: std_logic_vector(4 downto 0);
-signal RegDst, Jump, Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, EX_MEM_WB,Zero,EX_MEM_zero_flag_out,PCSrc: STD_LOGIC;
+signal RegDst, Jump, Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite,Zero,EX_MEM_zero_flag_out,PCSrc: STD_LOGIC;
 signal ALUOp, Forward_MUX_A, Forward_MUX_B : std_logic_vector(1 downto 0);
 signal WB_ID_EX_out,WB_EX_MEM_out,WB_out  : std_logic_vector(1 downto 0);
 signal M_ID_EX_out,M_EX_MEM_out   : std_logic_vector(2 downto 0);
@@ -289,7 +289,7 @@ PCSrc <= EX_MEM_zero_flag_out and M_EX_MEM_out(2);
 	MUX_B       : MUX3x1_32bit    	   port map(ReadData2_EX_out, Write_mux_out,MemAddress,Forward_MUX_B, MUX_B_out);
 	MUX_ALUSRC  : MUX2x1_32bit         port map(MUX_B_out, SignExtend_EX, EX_out(0), MUX_ALUSRC_OUT);
 	EX_MEM 		: EX_MEM_REGISTER 	   port map(clk, reset,WB_ID_EX_out,M_ID_EX_out,Add2_out,Zero,AluResult,MUX_B_out,MUX_RegDst_out,WB_EX_MEM_out,M_EX_MEM_out,EX_MEM_pc_adder_out, EX_MEM_zero_flag_out,MemAddress, mem_write_data, EX_MEM_mux_out);
-	MEM         : DataMemory           port map(clk,MemAddress,M_EX_MEM_out(2),M_EX_MEM_out(1), mem_write_data,MemDataOut);
+	MEM         : DataMemory           port map(clk,MemAddress,M_EX_MEM_out(0),M_EX_MEM_out(1), mem_write_data,MemDataOut);
 	MEM_WB		: MEM_WB_REGISTER      port map(clk,reset,WB_EX_MEM_out,MemDataOut,MemAddress,EX_MEM_mux_out,WB_out,read_data_reg_to_mux,mem_add_out,write_reg);
 	MUX_Write   : MUX2x1_32bit         port map(read_data_reg_to_mux, mem_add_out,WB_out(0), Write_mux_out);
 
